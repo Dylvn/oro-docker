@@ -21,7 +21,7 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 
 1. Follow the [Symfony Server installation](https://doc.oroinc.com/backend/setup/dev-environment/docker-and-symfony/mac/) instructions.
 2. Follow the [Symfony Server Local domain names](https://symfony.com/doc/current/setup/symfony_server.html#local-domain-names).
-3. Run `composer create-project oro/commerce-crm-application tmp 5.1.* --no-progress --no-interaction --no-install`
+3. Run `composer create-project oro/commerce-crm-application tmp 5.1.0 --no-progress --no-interaction --no-install`
 4. Run `cd tmp`
 5. Run `rm -Rf docker-compose.yaml`
 6. Run `composer install --no-progress --no-interaction`
