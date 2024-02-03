@@ -16,10 +16,6 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
-# Official docker compose image.
-image:
-  name: docker/compose:latest
-
 services:
   - docker:dind
 
