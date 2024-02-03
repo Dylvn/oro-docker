@@ -27,13 +27,22 @@ before_script:
 
 stages:          # List of stages for jobs, and their order of execution
   - build
+  - test
 
-build-job:       # This job runs in the build stage, which runs first.
+build-job:
   stage: build
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker compose -f compose.yaml -f compose.php.yaml build --pull
+    - docker tag my_php_service_image $CI_REGISTRY_IMAGE/php:latest
+    - docker push $CI_REGISTRY_IMAGE/php:latest
+
+test-job:       # This job runs in the build stage, which runs first.
+  stage: test
+  script:
+#    - docker compose -f compose.yaml -f compose.php.yaml build --pull
     - docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
     - docker compose exec php php bin/console oro:install --env=test
-#    - curl -v -o /dev/null http://localhost
-#    - curl -vk -o /dev/null https://localhost
+    - curl -v -o /dev/null http://localhost
+    - curl -vk -o /dev/null https://localhost
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
