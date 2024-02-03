@@ -30,10 +30,7 @@ before_script:
   - mkdir -p ~/.docker/cli-plugins/
   - curl -SL https://github.com/docker/compose/releases/download/v2.0.0-beta.6/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
   - chmod +x ~/.docker/cli-plugins/docker-compose
-  - docker compose version
-
-  # Installation de curl (au cas où il ne serait pas déjà installé)
-  - apt-get install -y curl
+  - docker --version
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -42,7 +39,7 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - docker --version
-    - docker compose --version
+#    - docker compose --version
 #    - docker compose -f compose.yaml -f compose.php.yaml build --pull --no-cache
 #    - docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
 #    - curl -v -o /dev/null http://localhost
