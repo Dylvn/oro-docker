@@ -6,7 +6,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	# After the installation, the following block can be deleted
 	if [ ! -f composer.json ]; then
 		rm -Rf tmp/
-		composer create-project oro/commerce-crm-application tmp 5.1.0 --no-progress --no-interaction --no-install
+		composer create-project oro/commerce-crm-application tmp 5.1.4 --no-progress --no-interaction --no-install
 
 		cd tmp
 		rm -Rf docker-compose.yml
