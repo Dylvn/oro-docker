@@ -23,7 +23,7 @@ services:
   - docker:dind
 
 before_script:
-  - apt-get install curl
+  - apk add curl
 
 stages:          # List of stages for jobs, and their order of execution
   - build
