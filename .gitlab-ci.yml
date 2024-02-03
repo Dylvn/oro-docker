@@ -23,6 +23,10 @@ image:
 services:
   - docker:dind
 
+before_script:
+  - docker version
+  - docker-compose version
+
 stages:          # List of stages for jobs, and their order of execution
   - build
 
