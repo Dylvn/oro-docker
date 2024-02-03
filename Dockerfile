@@ -48,6 +48,7 @@ RUN set -eux; \
 		bcmath \
 		ldap \
     	pcntl \
+    	pdo_pgsql \
 	;
 
 RUN set -eux; \
