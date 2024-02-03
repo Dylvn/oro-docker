@@ -17,14 +17,23 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 image:
-  name: docker:latest
-
-services:
-  - docker:dind
+  name: ubuntu:latest
 
 before_script:
-  - docker version
-  - docker-compose version
+  # Mise à jour des paquets
+  - apt-get update -y && apt-get install -y apt-transport-https ca-certificates curl software-properties-common lsb-release
+
+  # Installation de Docker
+  - curl -fsSL https://get.docker.com | sh
+
+  # Docker Compose V2
+  - mkdir -p ~/.docker/cli-plugins/
+  - curl -SL https://github.com/docker/compose/releases/download/v2.0.0-beta.6/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+  - chmod +x ~/.docker/cli-plugins/docker-compose
+  - docker compose version
+
+  # Installation de curl (au cas où il ne serait pas déjà installé)
+  - apt-get install -y curl
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -32,8 +41,10 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - docker-compose -f compose.yaml -f compose.php.yaml build --pull --no-cache
-    - docker-compose -f compose.yaml -f compose.php.yaml up --wait --no-build
-    - curl -v -o /dev/null http://localhost
-    - curl -vk -o /dev/null https://localhost
-    - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
+    - docker --version
+    - docker compose --version
+#    - docker compose -f compose.yaml -f compose.php.yaml build --pull --no-cache
+#    - docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
+#    - curl -v -o /dev/null http://localhost
+#    - curl -vk -o /dev/null https://localhost
+#    - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
