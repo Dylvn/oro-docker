@@ -33,7 +33,7 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - docker-compose -f compose.yaml -f compose.php.yaml build --pull --no-cache
-    - docker-compose -f compose.yaml -f compose.php.yaml up --detach
+    - docker-compose -f compose.yaml -f compose.php.yaml up --wait --no-build
     - curl -v -o /dev/null http://localhost
     - curl -vk -o /dev/null https://localhost
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
