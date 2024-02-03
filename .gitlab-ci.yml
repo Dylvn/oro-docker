@@ -29,6 +29,8 @@ before_script:
   # Docker Compose V2
   - apt-get install docker-compose-plugin
 
+  - service docker start
+
 stages:          # List of stages for jobs, and their order of execution
   - build
 
