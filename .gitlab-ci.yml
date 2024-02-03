@@ -17,19 +17,13 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 image:
-  name: ubuntu:latest
+  name: docker:latest
+
+services:
+  - docker:dind
 
 before_script:
-  # Mise à jour des paquets
-  - apt-get update -y && apt-get install -y apt-transport-https ca-certificates curl software-properties-common lsb-release
-
-  # Installation de Docker
-  - curl -fsSL https://get.docker.com | sh
-
-  # Docker Compose V2
-  - apt-get install docker-compose-plugin
-
-  - service docker start
+  - apt-get install curl
 
 stages:          # List of stages for jobs, and their order of execution
   - build
