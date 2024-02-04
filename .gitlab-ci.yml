@@ -25,7 +25,7 @@ test-job:
   stage: test
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - IMAGES_PREFIX="$CI_REGISTRY_IMAGE/" ORO_ENV=test APP_ENV docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
+    - IMAGES_PREFIX="$CI_REGISTRY_IMAGE/" ORO_ENV=test APP_ENV=test docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
     - docker compose exec -T php echo $APP_DEV
     - docker compose exec php php bin/console oro:install --env=test
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
