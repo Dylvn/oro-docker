@@ -8,17 +8,17 @@ before_script:
   - apk add curl
 
 stages:
-  - build
+ # - build
   - test
 
-build-job:
-  stage: build
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE/app-php:latest || true
-    - docker compose -f compose.yaml -f compose.php.yaml build --pull
-    - docker tag app-php $CI_REGISTRY_IMAGE/app-php:latest
-    - docker push $CI_REGISTRY_IMAGE/app-php:latest
+#build-job:
+#  stage: build
+#  script:
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    - docker pull $CI_REGISTRY_IMAGE/app-php:latest || true
+#    - docker compose -f compose.yaml -f compose.php.yaml build --pull
+#    - docker tag app-php $CI_REGISTRY_IMAGE/app-php:latest
+#    - docker push $CI_REGISTRY_IMAGE/app-php:latest
 
 
 test-job:
