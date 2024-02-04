@@ -25,7 +25,7 @@ test-job:
   stage: test
   script:
     - docker compose -f compose.yaml -f compose.php.yaml build --pull
-    - docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
+    - IMAGES_PREFIX='oro-docker/' docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
     - docker compose exec php php bin/console oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='PleaseReplaceWithSomeStrongPassword' --application-url='https://localhost/' --sample-data=y
     - curl -vk -o /dev/null https://localhost
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
