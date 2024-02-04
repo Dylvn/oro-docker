@@ -15,10 +15,10 @@ build-job:
   stage: build
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull app-php:latest || true
+    - docker pull $CI_REGISTRY_IMAGE/app-php:latest || true
     - docker compose -f compose.yaml -f compose.php.yaml build --pull
-    - docker tag app-php app-php:latest
-    - docker push app-php:latest
+    - docker tag app-php $CI_REGISTRY_IMAGE/app-php:latest
+    - docker push $CI_REGISTRY_IMAGE/app-php:latest
 
 
 test-job:
