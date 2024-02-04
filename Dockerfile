@@ -52,6 +52,7 @@ RUN set -eux; \
     	sockets \
 	;
 
+# hadolint ignore=DL3018
 RUN set -eux; \
     apk add --no-cache autoconf g++ make; \
     pecl install mongodb; \
