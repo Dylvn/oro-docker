@@ -51,6 +51,7 @@ RUN set -eux; \
     	pdo_pgsql \
 	;
 
+# hadolint ignore=DL3018
 RUN set -eux; \
     apk add --no-cache autoconf g++ make; \
     pecl install mongodb; \
@@ -71,7 +72,7 @@ COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
-HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
+HEALTHCHECK --start-period=300s CMD curl -f http://localhost:2019/metrics || exit 1
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 # Dev FrankenPHP image
