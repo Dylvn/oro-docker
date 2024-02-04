@@ -8,18 +8,17 @@ before_script:
   - apk add curl
 
 stages:
-  # - build
+  - build
   - test
 
-# build-job:
-#   stage: build
-#   script:
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#     - echo 'app-php:latest'
-#     - docker pull $CI_REGISTRY_IMAGE/app-php 
-#     # - docker compose -f compose.yaml -f compose.php.yaml build --pull
-#     # - docker tag app-php $CI_REGISTRY_IMAGE/app-php:latest
-#     # - docker push $CI_REGISTRY_IMAGE/app-php:latest
+build-job:
+  stage: build
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker compose -f compose.yaml -f compose.php.yaml build --pull
+    - docker tag app-php $CI_REGISTRY_IMAGE/app-php:latest
+    - docker push $CI_REGISTRY_IMAGE/app-php:latest
+  when: manual
 
 
 test-job:
@@ -28,6 +27,5 @@ test-job:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - IMAGES_PREFIX="$CI_REGISTRY_IMAGE/" docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
     - docker compose exec php php bin/console oro:install --language=en --formatting-code=en_US --organization-name='Acme Inc.' --user-name=admin --user-email=admin@example.com --user-firstname=John --user-lastname=Doe --user-password='PleaseReplaceWithSomeStrongPassword' --application-url='https://localhost/' --sample-data=y
-    - curl -vk -o /dev/null https://localhost
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Unit
     - docker compose exec -T php bin/phpunit vendor/oro/commerce/src/Oro/Bundle/ProductBundle/Tests/Functional
