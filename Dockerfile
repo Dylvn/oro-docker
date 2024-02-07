@@ -49,6 +49,7 @@ RUN set -eux; \
 		ldap \
     	pcntl \
     	pdo_pgsql \
+    	sockets \
 	;
 
 # hadolint ignore=DL3018
@@ -79,7 +80,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 FROM frankenphp_base AS frankenphp_dev
 
 ENV APP_ENV=dev XDEBUG_MODE=off ORO_ENV=dev ORO_DEBUG=1
-VOLUME /app/var/
+VOLUME /app/var/cache /app/var/logs
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
