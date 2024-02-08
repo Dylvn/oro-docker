@@ -30,36 +30,21 @@ jobs:
           load: true
           files: |
             compose.yaml
-            compose.override.yaml
+            compose.php.yaml
           set: |
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
             *.cache-to=type=gha,scope=${{github.ref}},mode=max
       -
         name: Start services
-        run: docker compose up --wait --no-build
+        run: docker compose -f compose.yaml -f compose.php.yaml up --wait --no-build
       -
-        name: Check HTTP reachability
-        run: curl -v -o /dev/null http://localhost
-      -
-        name: Check HTTPS reachability
-        run: curl -vk -o /dev/null https://localhost
-      -
-        name: Create test database
-        if: false # Remove this line if Doctrine ORM is installed
-        run: docker compose exec -T php bin/console -e test doctrine:database:create
-      -
-        name: Run migrations
-        if: false # Remove this line if Doctrine Migrations is installed
-        run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+        name: Install OroCommerce
+        run: docker compose exec php php bin/console oro:install --env=test
       -
         name: Run PHPUnit
         if: false # Remove this line if PHPUnit is installed
         run: docker compose exec -T php bin/phpunit
-      -
-        name: Doctrine Schema Validator
-        if: false # Remove this line if Doctrine ORM is installed
-        run: docker compose exec -T php bin/console -e test doctrine:schema:validate
   lint:
     name: Docker Lint
     runs-on: ubuntu-latest

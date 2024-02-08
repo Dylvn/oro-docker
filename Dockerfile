@@ -1,7 +1,8 @@
 #syntax=docker/dockerfile:1.4
 
 # Versions
-FROM dunglas/frankenphp:1-alpine AS frankenphp_upstream
+FROM dunglas/frankenphp:latest-builder-php8.2-alpine AS frankenphp_upstream
+FROM node:18-alpine AS node
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
@@ -29,13 +30,41 @@ RUN set -eux; \
 		intl \
 		opcache \
 		zip \
+		ctype \
+		curl \
+		fileinfo \
+		gd \
+		json \
+		mbstring \
+		sodium \
+		openssl \
+		pgsql \
+		pcre \
+		simplexml \
+		tokenizer \
+		xml \
+		imap \
+		soap \
+		bcmath \
+		ldap \
+    	pcntl \
+    	pdo_pgsql \
 	;
+
+# hadolint ignore=DL3018
+RUN set -eux; \
+    apk add --no-cache autoconf g++ make; \
+    pecl install mongodb; \
+    docker-php-ext-enable mongodb;
+
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+RUN npm install -g npm@9
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
-
-###> recipes ###
-###< recipes ###
 
 COPY --link frankenphp/conf.d/app.ini $PHP_INI_DIR/conf.d/
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
@@ -43,13 +72,13 @@ COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
-HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
+HEALTHCHECK --start-period=300s CMD curl -f http://localhost:2019/metrics || exit 1
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
-ENV APP_ENV=dev XDEBUG_MODE=off
+ENV APP_ENV=dev XDEBUG_MODE=off ORO_ENV=dev ORO_DEBUG=1
 VOLUME /app/var/
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
