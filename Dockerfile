@@ -1,7 +1,7 @@
 #syntax=docker/dockerfile:1.4
 
 # Versions
-FROM dunglas/frankenphp:latest-builder-php8.2-alpine AS frankenphp_upstream
+FROM dunglas/frankenphp:1-php8.2 AS frankenphp_upstream
 FROM node:18-alpine AS node
 
 # The different stages of this Dockerfile are meant to be built into separate images
@@ -15,13 +15,13 @@ FROM frankenphp_upstream AS frankenphp_base
 WORKDIR /app
 
 # persistent / runtime deps
-# hadolint ignore=DL3018
-RUN apk add --no-cache \
-		acl \
-		file \
-		gettext \
-		git \
-	;
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	acl \
+	file \
+	gettext \
+	git \
+	&& rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
 	install-php-extensions \
@@ -52,7 +52,6 @@ RUN set -eux; \
     	sockets \
 	;
 
-# hadolint ignore=DL3018
 RUN set -eux; \
     apk add --no-cache autoconf g++ make; \
     pecl install mongodb; \
