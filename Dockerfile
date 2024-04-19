@@ -2,7 +2,6 @@
 
 # Versions
 FROM dunglas/frankenphp:1-php8.2 AS frankenphp_upstream
-FROM node:18-alpine AS node
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
