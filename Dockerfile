@@ -10,6 +10,8 @@ FROM dunglas/frankenphp:1-php8.2 AS frankenphp_upstream
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 WORKDIR /app
 
 # persistent / runtime deps
