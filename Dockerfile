@@ -8,7 +8,6 @@ FROM node:18-alpine AS node
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
-
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
 
@@ -21,7 +20,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	file \
 	gettext \
 	git \
+	autoconf \
+	g++ \
+	make \
+	libssl-dev \
+    curl \
+    gnupg \
+    && curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs \
 	&& rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g npm@9
 
 RUN set -eux; \
 	install-php-extensions \
@@ -53,15 +62,8 @@ RUN set -eux; \
 	;
 
 RUN set -eux; \
-    apt-get install -y autoconf g++ make libssl-dev; \
     pecl install mongodb; \
     docker-php-ext-enable mongodb;
-
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
-RUN npm install -g npm@9
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
