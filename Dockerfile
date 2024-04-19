@@ -52,9 +52,8 @@ RUN set -eux; \
     	sockets \
 	;
 
-# hadolint ignore=DL3018
 RUN set -eux; \
-    apk add --no-cache autoconf g++ make; \
+    apt-get install -y autoconf g++ make libssl-dev; \
     pecl install mongodb; \
     docker-php-ext-enable mongodb;
 
