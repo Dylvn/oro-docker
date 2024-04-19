@@ -1,0 +1,5 @@
+services:
+  php:
+    environment:
+      ORO_ENV: test
+      APP_ENV: test

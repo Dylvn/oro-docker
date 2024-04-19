@@ -2,31 +2,16 @@
 
 ## Selecting a Specific Symfony Version
 
-Use the `SYMFONY_VERSION` environment variable to select a specific Symfony version.
+Use the `ORO_PROJECT` environment variable to select a specific Oro project.
 
-For instance, use the following command to install Symfony 6.4:
-
-On Linux:
-
-    SYMFONY_VERSION=6.4.* docker compose up -d --wait
-On Windows:
-
-    set SYMFONY_VERSION=6.4.* && docker compose up -d --wait&set SYMFONY_VERSION=
-
-## Installing Development Versions of Symfony
-
-To install a non-stable version of Symfony, use the `STABILITY` environment variable during the build.
-The value must be [a valid Composer stability option](https://getcomposer.org/doc/04-schema.md#minimum-stability).
-
-For instance, use the following command to use the development branch of Symfony:
+For instance, use the following command to install oroplatform:
 
 On Linux:
 
-    STABILITY=dev docker compose up -d --wait
-
+    ORO_PROJECT="oro/platform-application" docker compose up -d --wait
 On Windows:
-    
-    set STABILITY=dev && docker compose up -d --wait&set STABILITY=
+
+    set ORO_PROJECT="oro/platform-application" && docker compose up -d --wait&set ORO_PROJECT=
 
 ## Customizing the Server Name
 

@@ -1,27 +1,37 @@
 #syntax=docker/dockerfile:1.4
 
 # Versions
-FROM dunglas/frankenphp:latest-builder-php8.2-alpine AS frankenphp_upstream
-FROM node:18-alpine AS node
+FROM dunglas/frankenphp:1-php8.2 AS frankenphp_upstream
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
-
 # Base FrankenPHP image
 FROM frankenphp_upstream AS frankenphp_base
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /app
 
 # persistent / runtime deps
-# hadolint ignore=DL3018
-RUN apk add --no-cache \
-		acl \
-		file \
-		gettext \
-		git \
-	;
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	acl \
+	file \
+	gettext \
+	git \
+	autoconf \
+	g++ \
+	make \
+	libssl-dev \
+    curl \
+    gnupg \
+    && curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g npm@9
 
 RUN set -eux; \
 	install-php-extensions \
@@ -49,19 +59,12 @@ RUN set -eux; \
 		ldap \
     	pcntl \
     	pdo_pgsql \
+    	sockets \
 	;
 
-# hadolint ignore=DL3018
 RUN set -eux; \
-    apk add --no-cache autoconf g++ make; \
     pecl install mongodb; \
     docker-php-ext-enable mongodb;
-
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
-RUN npm install -g npm@9
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1

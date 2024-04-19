@@ -1,6 +1,6 @@
 services:
   database:
-    image: oroinc/pgsql:15.3-alpine
+    image: oroinc/pgsql:13.7-1-alpine
     ports: ["5432"]
     labels:
       com.symfony.server.service-prefix: 'ORO_DB'
